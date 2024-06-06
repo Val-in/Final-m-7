@@ -25,7 +25,7 @@ namespace Final_project_class_1
 
             order3.DisplayAddress();
             order3.DeliveryProcess();
-            Console.ReadKey();
+            Console.WriteLine();
 
         }
     }
