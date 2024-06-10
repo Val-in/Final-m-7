@@ -11,12 +11,16 @@ namespace Final_project_class_1
             var recipient3 = new RecipientInfo("Doe", "James", "+156202013");
 
             var homeDelivery = new HomeDelivery("123 Main St.", recipient1, "Mr. Mike", DayOfWeek.Friday, DateTime.Now.AddHours(3));
-            var pickPointDelivery = new PickPointDelivery("Wu Mall", recipient2, DayOfWeek.Wednesday, DateTime.Now.AddHours(1));
-            var shopDelivery = new ShopDelivery("Main Shop", recipient3, DayOfWeek.Wednesday, DateTime.Now.AddHours(0.5));
+            var pickPointDelivery = new PickPointDelivery("Wu Mall", recipient2, DayOfWeek.Wednesday, DateTime.Now.AddHours(1), "9:00-18:00");
+            var shopDelivery = new ShopDelivery("Main Shop", recipient3, DayOfWeek.Wednesday, DateTime.Now.AddHours(0.5), "10:00-20:00");
 
-            var order1 = new Order<HomeDelivery, object>(homeDelivery, 534120, "Workbook");
-            var order2 = new Order<PickPointDelivery, object>(pickPointDelivery, 534121, "Notebook");
-            var order3 = new Order<ShopDelivery, object>(shopDelivery, 534122, "Pen");
+            var product1 = new Product("Workbook", 2);
+            var product2 = new Product("Notebook", 1);
+            var product3 = new Product("Pen", 5);
+
+            var order1 = new Order<HomeDelivery, object>(homeDelivery, 534120, product1); //сейчас мы как-то используем object?
+            var order2 = new Order<PickPointDelivery, object>(pickPointDelivery, 534121, product2);
+            var order3 = new Order<ShopDelivery, object>(shopDelivery, 534122, product3);
 
             order1.OrderInfo();
             order1.DeliveryProcess();
@@ -36,18 +40,20 @@ namespace Final_project_class_1
     //класс для описания товара
     public class Product
     {
-        public string[] ProductName;
+        public string Name;
+        public int Quantity;
 
-        public Product()
+        public Product(string name, int quantity)
         {
-
+            Name = name;
+            Quantity = quantity;
         }
 
     }
 
     public class RecipientInfo
     {
-        public string LastName;
+        public string LastName; //почему мы все-таки убрали авто свойства?
         public string FirstName;
         public string PhoneNumber;
 
@@ -67,22 +73,27 @@ namespace Final_project_class_1
         public DayOfWeek DeliveryDayOfWeek;
         public RecipientInfo Recipient;
 
-        //Метод Deliveryman выводит сообщение о доставке
+        public Delivery(string address, RecipientInfo recipient, DayOfWeek deliveryDay, DateTime deliveryTime)
+        {
+            Address = address;
+            Recipient = recipient;
+            DeliveryDayOfWeek = deliveryDay;
+            DeliveryTime = deliveryTime;
+        }
+
+        //Метод DeliveryInfo выводит сообщение о доставке
         public abstract void DeliveryInfo();
 
     }
 
     public class HomeDelivery : Delivery
     {
-        public string CourierName { get; set; }
+        public string CourierName { get; set; } // а тут вот ставим свойство?
 
-        public HomeDelivery(string address, RecipientInfo recipient, string courierName, DayOfWeek deliveryDayOfWeek, DateTime deliveryTime) //конструктор
+        public HomeDelivery(string address, RecipientInfo recipient, string courierName, DayOfWeek deliveryDay, DateTime deliveryTime) //конструктор
+            : base(address, recipient, deliveryDay, deliveryTime)
         {
-            Address = address;
-            Recipient = recipient;
             CourierName = courierName;
-            DeliveryDayOfWeek = deliveryDayOfWeek;
-            DeliveryTime = deliveryTime;
         }
 
         public override void DeliveryInfo()
@@ -94,55 +105,50 @@ namespace Final_project_class_1
 
     public class PickPointDelivery : Delivery
     {
-        public PickPointDelivery(string address, RecipientInfo recipient, DayOfWeek deliveryDayOfWeek, DateTime deliveryTime) //конструктор
-        {
-            Address = address;
-            Recipient = recipient;
-            DeliveryDayOfWeek = deliveryDayOfWeek;
-            DeliveryTime = deliveryTime;
+        public string WorkingHours;
+        public PickPointDelivery(string address, RecipientInfo recipient, DayOfWeek deliveryDay, DateTime deliveryTime, string workingHours)
+             : base(address, recipient, deliveryDay, deliveryTime)
+        {     
+            WorkingHours = workingHours;
         }
-
 
         public override void DeliveryInfo()
         {
-            Console.WriteLine($"Delivery for {Recipient.LastName} {Recipient.FirstName} to pick point {Address} on {DeliveryDayOfWeek} at {DeliveryTime}.");
+            Console.WriteLine($"PickPoint Delivery: {Address}, Working Hours: {WorkingHours}, Delivery Time: {DeliveryTime}");
         }
-
 
         public class ShopDelivery : Delivery
         {
-            public ShopDelivery(string address, RecipientInfo recipient, DayOfWeek deliveryDayOfWeek, DateTime deliveryTime) //конструктор
+            public string WorkingHours;
+
+            public ShopDelivery(string address, RecipientInfo recipient, DayOfWeek deliveryDay, DateTime deliveryTime, string workingHours)
+                : base(address, recipient, deliveryDay, deliveryTime)
             {
-                Address = address;
-                Recipient = recipient;
-                DeliveryDayOfWeek = deliveryDayOfWeek;
-                DeliveryTime = deliveryTime;
+                WorkingHours = workingHours;
             }
 
             public override void DeliveryInfo()
             {
-                Console.WriteLine($"Delivery for {Recipient.LastName} {Recipient.FirstName} to pick point {Address} on {DeliveryDayOfWeek} at {DeliveryTime}.");
+                Console.WriteLine($"Shop Delivery: {Address}, Working Hours: {WorkingHours}, Delivery Time: {DeliveryTime}");
             }
         }
 
         public class Order<TDelivery, TStruct> where TDelivery : Delivery
         {
             public TDelivery Delivery;
-
             public int Number;
+            public Product Product;
 
-            public string Description;
-
-            public Order(TDelivery delivery, int number, string description)
+            public Order(TDelivery delivery, int number, Product product)
             {
                 Delivery = delivery;
                 Number = number;
-                Description = description;
+                Product = product;
             }
 
             public void OrderInfo()
             {
-                Console.WriteLine($"Order {Number}: {Delivery.Address}. About delivery: {Description}");
+                Console.WriteLine($"Order {Number}: {Delivery.Address}. About delivery: {Product.Name}, Quantity: {Product.Quantity}");
             }
 
             public void DeliveryProcess()
