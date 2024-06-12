@@ -21,7 +21,7 @@ namespace Final_project_class_1
             var product3 = new Product("Pen", 5);
 
             var order1 = new Order<HomeDelivery, List<Product>>(homeDelivery, 534120, new List<Product> {product1, product2 });
-            var order2 = new Order<PickPointDelivery, List<Product>>(pickPointDelivery, 534121, new List<Product> { product3 });
+            var order2 = new Order<PickPointDelivery, List<Product>>(pickPointDelivery, 534121, new List<Product> { product2, product3 });
             var order3 = new Order<ShopDelivery, List<Product>>(shopDelivery, 534122, new List<Product> { product1, product1});
 
             order1.OrderInfo();
@@ -186,7 +186,7 @@ namespace Final_project_class_1
 
         public void OrderInfo()
         {
-            Console.WriteLine($"Order {Number}: {Delivery.Address}. About delivery: ");
+            Console.WriteLine($"Order {Number}: {Delivery.Address} About delivery: ");
             if (Products is List<Product> productList)
             {
                 foreach (var product in productList)
