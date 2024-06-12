@@ -45,7 +45,6 @@ namespace Final_project_class_1
             Console.WriteLine();
 
             Console.ReadKey();
-
         }
     }
 
@@ -90,8 +89,6 @@ namespace Final_project_class_1
 
             return new Product(product1.Name, product1.Quantity + product2.Quantity);
         }
-
-
     }
 
     public class RecipientInfo
@@ -106,7 +103,6 @@ namespace Final_project_class_1
             FirstName = firstName;
             PhoneNumber = phoneNumber;
         }
-
     }
 
     public abstract class Delivery
@@ -126,7 +122,6 @@ namespace Final_project_class_1
 
         //Метод DeliveryInfo выводит сообщение о доставке
         public abstract void DeliveryInfo();
-
     }
 
     public class HomeDelivery : Delivery
@@ -143,7 +138,6 @@ namespace Final_project_class_1
         {
             Console.WriteLine($"Delivery by {CourierName} for {Recipient.LastName} {Recipient.FirstName} to address {Address} on {DeliveryDayOfWeek} at {DeliveryTime}. In a case call the number {Recipient.PhoneNumber}");
         }
-
     }
 
     public class PickPointDelivery : Delivery
